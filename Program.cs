@@ -35,7 +35,7 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
-
+app.MapGet("/", () => "Hello from Jenkins updated deployment!");
 app.Run("http://0.0.0.0:3000");
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
