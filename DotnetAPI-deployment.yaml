@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnetapi
+  labels:
+    app: dotnetapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dotnetapi
+  template:
+    metadata:
+      labels:
+        app: dotnetapi
+    spec:
+      containers:
+      - name: dotnetapi
+        image: 474668409393.dkr.ecr.ap-south-1.amazonaws.com/microservice-demo:latest
+        ports:
+        - containerPort: 3000
+
