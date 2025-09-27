@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/root/MicroserviceDemo/MicroserviceDemo.csproj": {}
+    "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj": {}
   },
   "projects": {
-    "/root/MicroserviceDemo/MicroserviceDemo.csproj": {
+    "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/root/MicroserviceDemo/MicroserviceDemo.csproj",
+        "projectUniqueName": "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj",
         "projectName": "MicroserviceDemo",
-        "projectPath": "/root/MicroserviceDemo/MicroserviceDemo.csproj",
+        "projectPath": "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj",
         "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/root/MicroserviceDemo/obj/",
+        "outputPath": "/home/ubuntu/MicroserviceDemo/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/root/.nuget/NuGet/NuGet.Config"
@@ -45,7 +45,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[8.0.19, )"
+              "version": "[8.0.20, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -71,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

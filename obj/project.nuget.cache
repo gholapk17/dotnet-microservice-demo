@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "O8tjHc59UdY=",
+  "dgSpecHash": "ob1D9uStg1c=",
   "success": true,
-  "projectFilePath": "/root/MicroserviceDemo/MicroserviceDemo.csproj",
+  "projectFilePath": "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj",
   "expectedPackageFiles": [
-    "/root/.nuget/packages/microsoft.aspnetcore.openapi/8.0.19/microsoft.aspnetcore.openapi.8.0.19.nupkg.sha512",
+    "/root/.nuget/packages/microsoft.aspnetcore.openapi/8.0.20/microsoft.aspnetcore.openapi.8.0.20.nupkg.sha512",
     "/root/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/root/.nuget/packages/microsoft.openapi/1.6.14/microsoft.openapi.1.6.14.nupkg.sha512",
     "/root/.nuget/packages/swashbuckle.aspnetcore/6.6.2/swashbuckle.aspnetcore.6.6.2.nupkg.sha512",

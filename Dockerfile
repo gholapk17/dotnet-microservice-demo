@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy project file and restore dependencies
-COPY *.csproj .
+COPY *.csproj . 
 RUN dotnet restore
 
-# Copy the rest of the source code and publish app
-COPY . .
+# Copy the rest of the source code and publish the app
+COPY . . 
 RUN dotnet publish -c Release -o /app/publish
 
 # Stage 2: Runtime image
@@ -25,4 +25,3 @@ EXPOSE 3000
 
 # Run the app
 ENTRYPOINT ["dotnet", "MicroserviceDemo.dll"]
-
