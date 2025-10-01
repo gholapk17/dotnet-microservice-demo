@@ -2,53 +2,50 @@ pipeline {
     agent any
 
     environment {
-        AWS_CREDENTIALS_ID = 'aws-eks'
-        REGION = 'ap-south-1'
-        ECR_REPO = 'microservice-demo'
-        GITHUB_REPO = 'https://github.com/gholapk17/dotnet-microservice-demo.git'
+        AWS_REGION = "ap-south-1"
+        ECR_REPO = "474668409393.dkr.ecr.ap-south-1.amazonaws.com/microservice-demo"
+        IMAGE_TAG = "latest"
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: "${env.GITHUB_REPO}"
+                git credentialsId: 'github-ssh', url: 'git@github.com:gholapk17/dotnet-microservice-demo.git', branch: 'main'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${ECR_REPO}:${BUILD_NUMBER}")
+                    sh 'docker build -t $ECR_REPO:$IMAGE_TAG .'
                 }
             }
         }
 
-        stage('Login to ECR & Push') {
+        stage('Login to ECR') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${env.AWS_CREDENTIALS_ID}"]]) {
-                    script {
-                        sh """
-                        aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin 474668409393.dkr.ecr.${REGION}.amazonaws.com
-                        docker tag ${ECR_REPO}:${BUILD_NUMBER} 474668409393.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}:${BUILD_NUMBER}
-                        docker push 474668409393.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}:${BUILD_NUMBER}
-                        """
-                    }
+                script {
+                    sh '''
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+                    '''
                 }
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                sh 'docker push $ECR_REPO:$IMAGE_TAG'
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${env.AWS_CREDENTIALS_ID}"]]) {
-                    script {
-                        sh """
-                        aws eks --region ${REGION} update-kubeconfig --name hello-cluster
-                        sed -i 's|image:.*|image: 474668409393.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}:${BUILD_NUMBER}|' hello-deployment.yaml
-                        kubectl apply -f hello-deployment.yaml
-                        kubectl apply -f hello-service.yaml
-                        kubectl apply -f hello-ingress.yaml
-                        """
-                    }
+                script {
+                    sh '''
+                        aws eks --region $AWS_REGION update-kubeconfig --name hello-cluster
+                        kubectl set image deployment/dotnetapi dotnetapi=$ECR_REPO:$IMAGE_TAG
+                        kubectl rollout status deployment/dotnetapi
+                    '''
                 }
             }
         }
