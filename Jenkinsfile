@@ -13,7 +13,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Use HTTPS URL with GitHub credentials
                 git credentialsId: 'github-credentials', url: 'https://github.com/gholapk17/dotnet-microservice-demo.git', branch: 'main'
             }
         }
@@ -21,7 +20,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image and tag it with the ECR repository and image tag
                     sh 'docker build -t $ECR_REPO:$IMAGE_TAG .'
                 }
             }
@@ -29,20 +27,16 @@ pipeline {
 
         stage('Login to ECR') {
             steps {
-                script {
-                    // Use AWS credentials to log in to ECR
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
-                        sh '''
-                            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
-                        '''
-                    }
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                    sh '''
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+                    '''
                 }
             }
         }
 
         stage('Push to ECR') {
             steps {
-                // Push the Docker image to ECR
                 sh 'docker push $ECR_REPO:$IMAGE_TAG'
             }
         }
@@ -50,14 +44,14 @@ pipeline {
         stage('Get Latest Image Digest from ECR') {
             steps {
                 script {
-                    // Fetch the digest of the latest image from ECR
-                    def imageDigest = sh(script: """
-                        aws ecr describe-images --repository-name microservice-demo --region $AWS_REGION --query "imageDetails[?imageTags[0]=='latest'].imageDigest" --output text
-                    """, returnStdout: true).trim()
-                    
-                    // Set the image digest as an environment variable to use in the deploy step
-                    env.IMAGE_DIGEST = imageDigest
-                    echo "Latest image digest: ${env.IMAGE_DIGEST}"
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                        def imageDigest = sh(script: """
+                            aws ecr describe-images --repository-name microservice-demo --region $AWS_REGION --query "imageDetails[?imageTags[0]=='latest'].imageDigest" --output text
+                        """, returnStdout: true).trim()
+                        
+                        env.IMAGE_DIGEST = imageDigest
+                        echo "Latest image digest: ${env.IMAGE_DIGEST}"
+                    }
                 }
             }
         }
@@ -65,11 +59,8 @@ pipeline {
         stage('Deploy to EKS') {
             steps {
                 script {
-                    // Retry deploy to EKS up to 3 times in case of failure
                     retry(3) {
-                        // Use AWS credentials for EKS deployment
                         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
-                            // Update kubeconfig for EKS cluster
                             sh '''
                                 aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
                                 kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$ECR_REPO@$IMAGE_DIGEST -n $KUBE_NAMESPACE
