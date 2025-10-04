@@ -487,11 +487,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj",
+      "projectUniqueName": "/home/ubuntu/dotnet-microservice-demo/MicroserviceDemo.csproj",
       "projectName": "MicroserviceDemo",
-      "projectPath": "/home/ubuntu/MicroserviceDemo/MicroserviceDemo.csproj",
+      "projectPath": "/home/ubuntu/dotnet-microservice-demo/MicroserviceDemo.csproj",
       "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/home/ubuntu/MicroserviceDemo/obj/",
+      "outputPath": "/home/ubuntu/dotnet-microservice-demo/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/root/.nuget/NuGet/NuGet.Config"
