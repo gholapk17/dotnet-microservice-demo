@@ -52,7 +52,7 @@ pipeline {
                 script {
                     // Fetch the digest of the latest image from ECR
                     def imageDigest = sh(script: """
-                        aws ecr describe-images --repository-name microservice-demo --region $AWS_REGION --query 'imageDetails[?imageTags[0]==\`latest\`].imageDigest' --output text
+                        aws ecr describe-images --repository-name microservice-demo --region $AWS_REGION --query "imageDetails[?imageTags[0]=='latest'].imageDigest" --output text
                     """, returnStdout: true).trim()
                     
                     // Set the image digest as an environment variable to use in the deploy step
