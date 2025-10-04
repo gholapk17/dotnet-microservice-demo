@@ -37,7 +37,7 @@ app.MapGet("/weatherforecast", () =>
     };
 
     // Custom message to display
-    var customMessage = "Hello, see today's weather. Have a Good Day!!!:";
+    var customMessage = "Hello, see today's weather. Have a Good Day. This update is now from Jenkins Pipeline trigger:";
 
     return new
     {
