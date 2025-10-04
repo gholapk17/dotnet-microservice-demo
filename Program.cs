@@ -37,7 +37,7 @@ app.MapGet("/weatherforecast", () =>
     };
 
     // Custom message to display
-    var customMessage = "Hello, see today's weather forecast Have a Good Day Ji. Chanegs aagayooo:";
+    var customMessage = "Hello, see today's weather forecast Have a Good Day Ji. Chanegs aagayooo. Common boy this time it should work boyee:";
 
     return new
     {
