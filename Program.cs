@@ -3,7 +3,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://0.0.0.0:3000");
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -18,7 +17,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();  // Ensure HTTPS redirection is enabled.
 
-var summaries = new[]
+var summaries = new[] 
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
@@ -27,15 +26,24 @@ var summaries = new[]
 // This endpoint returns a mock weather forecast with random temperatures and summaries.
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),  // Random temperature between -20 and 55 Celsius
-            summaries[Random.Shared.Next(summaries.Length)]  // Random weather summary
-        ))
-        .ToArray();
-    return forecast;  // Return the generated forecast as a JSON array.
+    // Custom weather data
+    var forecast = new[]
+    {
+        new WeatherForecast(DateOnly.FromDateTime(DateTime.Now.AddDays(1)), 45, "Balmy"),
+        new WeatherForecast(DateOnly.FromDateTime(DateTime.Now.AddDays(2)), 30, "Warm"),
+        new WeatherForecast(DateOnly.FromDateTime(DateTime.Now.AddDays(3)), 15, "Scorching"),
+        new WeatherForecast(DateOnly.FromDateTime(DateTime.Now.AddDays(4)), 48, "Hot"),
+        new WeatherForecast(DateOnly.FromDateTime(DateTime.Now.AddDays(5)), 21, "Sweltering")
+    };
+
+    // Custom message to display
+    var customMessage = "Hello, see today's weather forecast Have a Good Day Ji. Chanegs aagayooo:";
+
+    return new
+    {
+        Message = customMessage,  // Display custom message
+        WeatherForecast = forecast  // Weather data
+    };
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();  // Enable OpenAPI support for this endpoint.
