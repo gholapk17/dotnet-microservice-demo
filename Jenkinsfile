@@ -52,12 +52,15 @@ pipeline {
                 script {
                     // Retry deploy to EKS up to 3 times in case of failure
                     retry(3) {
-                        // Update kubeconfig for EKS cluster
-                        sh '''
-                            aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
-                            kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$ECR_REPO:$IMAGE_TAG -n $KUBE_NAMESPACE
-                            kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
-                        '''
+                        // Use AWS credentials for EKS deployment
+                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                            // Update kubeconfig for EKS cluster
+                            sh '''
+                                aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
+                                kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$ECR_REPO:$IMAGE_TAG -n $KUBE_NAMESPACE
+                                kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
+                            '''
+                        }
                     }
                 }
             }
