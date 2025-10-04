@@ -40,7 +40,7 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();  // Enable OpenAPI support for this endpoint.
 
-app.MapGet("/hello", () => "Hello from Jenkins CI/CD Pipeline!");  // Simple hello world endpoint for testing.
+app.MapGet("/hello", () => "Hello world from Jenkins CI/CD Pipeline!");  // Simple hello world endpoint for testing.
 
 app.Run();  // Run the application.
 
