@@ -9,8 +9,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -18,33 +16,40 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection();  // Ensure HTTPS redirection is enabled.
 
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
+// Map the weather forecast endpoint
+// This endpoint returns a mock weather forecast with random temperatures and summaries.
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
+            Random.Shared.Next(-20, 55),  // Random temperature between -20 and 55 Celsius
+            summaries[Random.Shared.Next(summaries.Length)]  // Random weather summary
         ))
         .ToArray();
-    return forecast;
+    return forecast;  // Return the generated forecast as a JSON array.
 })
 .WithName("GetWeatherForecast")
-.WithOpenApi();
+.WithOpenApi();  // Enable OpenAPI support for this endpoint.
 
-app.MapGet("/hello", () => "Hello from Jenkins CI/CD Pipeline!");
+app.MapGet("/hello", () => "Hello from Jenkins CI/CD Pipeline!");  // Simple hello world endpoint for testing.
 
-app.Run();
+app.Run();  // Run the application.
 
+
+// WeatherForecast record to hold weather data
+// It contains the date, temperature in Celsius, and the weather summary
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
+    // Property to convert Celsius to Fahrenheit
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
