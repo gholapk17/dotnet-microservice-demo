@@ -47,6 +47,21 @@ pipeline {
             }
         }
 
+        stage('Get Latest Image Digest from ECR') {
+            steps {
+                script {
+                    // Fetch the digest of the latest image from ECR
+                    def imageDigest = sh(script: """
+                        aws ecr describe-images --repository-name microservice-demo --region $AWS_REGION --query 'imageDetails[?imageTags[0]==\`latest\`].imageDigest' --output text
+                    """, returnStdout: true).trim()
+                    
+                    // Set the image digest as an environment variable to use in the deploy step
+                    env.IMAGE_DIGEST = imageDigest
+                    echo "Latest image digest: ${env.IMAGE_DIGEST}"
+                }
+            }
+        }
+
         stage('Deploy to EKS') {
             steps {
                 script {
@@ -57,7 +72,7 @@ pipeline {
                             // Update kubeconfig for EKS cluster
                             sh '''
                                 aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
-                                kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$ECR_REPO:$IMAGE_TAG -n $KUBE_NAMESPACE
+                                kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$ECR_REPO@$IMAGE_DIGEST -n $KUBE_NAMESPACE
                                 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
                             '''
                         }
